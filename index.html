@@ -9,6 +9,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Hangout hung</title>
+    
+    
+    
   </head>
 
   <body>
@@ -18,26 +21,28 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/Grundlefleck/hangout_hung">View on GitHub</a>
 
-          <h1 id="project_title">Hangout hung</h1>
+          <h1 id="project_title">Hangout hung?</h1>
         </header>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
+      
       <section id="main_content" class="inner">
-        <input class="button" id="registerHungHangout" onclick="alert('Button hooked up');" style="visibility: visible;" type="button" value="Hangout is hanging!" />
-
-<p></p>
+      <h5>Install this Hangout Extension to register each time your Hangout freezes!</h5>
+      
+      <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script>
+      <div id="placeholder-rr"></div>
+      <script>
+  gapi.hangout.render('placeholder-rr', {
+    'render': 'createhangout',
+    'initial_apps': [{'app_id' : '275474340993'}],
+    'widget_size': 175
+  });
+      </script> 
       </section>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Hangout hung maintained by <a href="https://github.com/Grundlefleck">Grundlefleck</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
 
     
 
