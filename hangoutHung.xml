@@ -15,7 +15,6 @@
 	<ModulePrefs title="Hangout Starter">
 		<Require feature="rpc" />
 		<Require feature="views" />
-		<Require feature="locked-domain" />
 	</ModulePrefs>
 	<Content type="html"><![CDATA[     
 
@@ -39,47 +38,57 @@
 <body>
 
 <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
 
 <h3>Hangout Hung</h3>
-
+<p>Click here when Hangout freezes!</p>
+<hr>
 <p>
-<input class="button" type="button" value="Show participants!" id="showParticipants" 
-    style="visibility:hidden;"
-    onClick="showParticipants()"/>
+  <div id="inputDiv"">
+    <input class="button" type="button" value="Hangout is hanging!" 
+      id="registerHungHangout" 
+      style="visibility:hidden;"
+      onClick="registerHungHangout()" />
+  </div>
 </p>
 
-<div id="participantsDiv"></div>
+<div id="feedbackDiv"></div>
 
-<hr>
-
-<p>Click here when Hangout freezes!</a></p>
+<img id="loading-template" style="visibility:hidden;"
+    src='https://dl.dropboxusercontent.com/s/pmpg00qfs9z4tb2/loading.gif?dl=1&token_hash=AAGUyelVe3hjlHzIy-Dpb9cAqz6lAsWfnFa32GfBLFokAA'
+    width='16'
+    height='16'
+    alt='Submitting...' />
 
 <script>
-function showParticipants() {
-  var participants = gapi.hangout.getParticipants();
-
-  var retVal = '<p>Participants: </p><ul>';
-
-  for (var index in participants) {
-    var participant = participants[index];
-
-    if (!participant.person) {
-      retVal += '<li>A participant not running this app</li>';
-    } else {
-      var person = participant.person;
-      retVal += '<li>' + person.displayName + '</li>';
-      retVal += '<ul>';
-        retVal += '<li>' + participant.locale + '</li>';
-      retVal += '</ul>';
+  
+function getHung(gapi, participants) {
+  return { hangout_id: "some made up id", participants: participants };
+}
+  
+function registerHungHangout() {
+  var firebase = new Firebase('https://hangout-hung.firebaseio.com/hangouts-hung');
+  var hung = getHung(gapi, gapi.hangout.getParticipants());
+  
+  
+  
+  firebase.push(hung, function(err) {
+    var response;
+    if (err) { 
+      response = "Whoops, an error occurred: " + err; 
+    } else { 
+      response = "Successfully registered a Hung Hangout."; 
     }
-  }
-
-  retVal += '</ul>';
-
-  var div = document.getElementById('participantsDiv');
-
-  div.innerHTML = retVal;
-  console.log('Hi there! ' + div.innerHTML);
+    $("#inputDiv").find("#loading").remove();
+    $("#feedbackDiv").append("<div>" + response + "</div>");
+  });
+  
+  $("#loading-template")
+    .clone()
+    .attr('id', 'loading')
+    .attr('style', 'visibility:visible')
+    .appendTo($("#inputDiv"))
 }
 
 function init() {
@@ -87,7 +96,7 @@ function init() {
   gapi.hangout.onApiReady.add(
       function(eventObj) {
         if (eventObj.isApiReady) {
-          document.getElementById('showParticipants')
+          document.getElementById('registerHungHangout')
             .style.visibility = 'visible';
         }
       });
