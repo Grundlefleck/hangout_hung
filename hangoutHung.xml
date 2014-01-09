@@ -5,18 +5,18 @@
  * the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
- *	
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License
 -->
-	<ModulePrefs title="Hangout Starter">
-		<Require feature="rpc" />
-		<Require feature="views" />
-	</ModulePrefs>
-	<Content type="html"><![CDATA[     
+  <ModulePrefs title="Hangout Starter">
+    <Require feature="rpc" />
+    <Require feature="views" />
+  </ModulePrefs>
+  <Content type="html"><![CDATA[
 
 <html>
 <style type="text/css">
@@ -25,13 +25,13 @@
   border-radius: 3px;
   -moz-border-radius: 3px;
   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
-  background: -moz-linear-gradient(top, #fff, #ddd);  
+  background: -moz-linear-gradient(top, #fff, #ddd);
   border: 1px solid #bbb;
 }
 
 .button:active {
-	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333)); 
-	background: -moz-linear-gradient(bottom, #ddd, #aaa); }
+  background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333));
+  background: -moz-linear-gradient(bottom, #ddd, #aaa); }
 
 -->
 </style>
@@ -46,8 +46,8 @@
 <hr>
 <p>
   <div id="inputDiv"">
-    <input class="button" type="button" value="Hangout is hanging!" 
-      id="registerHungHangout" 
+    <input class="button" type="button" value="Hangout is hanging!"
+      id="registerHungHangout"
       style="visibility:hidden;"
       onClick="registerHungHangout()" />
   </div>
@@ -62,41 +62,41 @@
     alt='Submitting...' />
 
 <script>
-  
+
 function serialiseParticipants(participants) {
   return $.map(participants, function(p) {
-    return { id: p.id, 
-             locale: p.locale, 
-	     personId: p.person.id, 
-	     name: p.person.displayName,
-	     hasAppEnabled: p.hasAppEnabled }});
+    return { id: p.id,
+             locale: p.locale,
+       personId: p.person.id,
+       name: p.person.displayName,
+       hasAppEnabled: p.hasAppEnabled }});
 }
 
 function getHung(gapi, participants) {
-  
+
   var hangout = { id: gapi.hangout.getHangoutId(), topic: gapi.hangout.getTopic() }
   var localParticipant = { id: gapi.hangout.getLocalParticipantId(), locale: gapi.hangout.getLocalParticipantLocale() };
   var participants = serialiseParticipants(participants);
   var id = hangout.id + "/" + localParticipant.id;
-  
+
   return { id: id, hangout: hangout, localParticipant: localParticipant, participants: participants };
 }
-  
+
 function registerHungHangout() {
   var firebase = new Firebase('https://hangout-hung.firebaseio.com/hangouts-hung');
   var hung = getHung(gapi, gapi.hangout.getParticipants());
-  
+
   firebase.push(hung, function(err) {
     var response;
-    if (err) { 
-      response = "Whoops, an error occurred: " + err; 
-    } else { 
-      response = "Successfully registered a Hung Hangout."; 
+    if (err) {
+      response = "Whoops, an error occurred: " + err;
+    } else {
+      response = "Successfully registered a Hung Hangout.";
     }
     $("#inputDiv").find("#loading").remove();
     $("#feedbackDiv").append("<div>" + response + "</div>");
   });
-  
+
   $("#loading-template")
     .clone()
     .attr('id', 'loading')
@@ -105,7 +105,7 @@ function registerHungHangout() {
 }
 
 function init() {
-  // When API is ready...                                                         
+  // When API is ready...
   gapi.hangout.onApiReady.add(
       function(eventObj) {
         if (eventObj.isApiReady) {
@@ -115,7 +115,7 @@ function init() {
       });
 }
 
-// Wait for gadget to load.                                                       
+// Wait for gadget to load.
 gadgets.util.registerOnLoadHandler(init);
 </script>
 </body>
