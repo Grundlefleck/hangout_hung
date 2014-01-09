@@ -63,15 +63,28 @@
 
 <script>
   
+function serialiseParticipants(participants) {
+  return $.map(participants, function(p) {
+    return { id: p.id, 
+             locale: p.locale, 
+	     personId: p.person.id, 
+	     name: p.person.displayName,
+	     hasAppEnabled: p.hasAppEnabled }});
+}
+
 function getHung(gapi, participants) {
-  return { hangout_id: "some made up id", participants: participants };
+  
+  var hangout = { id: gapi.hangout.getHangoutId(), topic: gapi.hangout.getTopic() }
+  var localParticipant = { id: gapi.hangout.getLocalParticipantId(), locale: gapi.hangout.getLocalParticipantLocale() };
+  var participants = serialiseParticipants(participants);
+  var id = hangout.id + "/" + localParticipant.id;
+  
+  return { id: id, hangout: hangout, localParticipant: localParticipant, participants: participants };
 }
   
 function registerHungHangout() {
   var firebase = new Firebase('https://hangout-hung.firebaseio.com/hangouts-hung');
   var hung = getHung(gapi, gapi.hangout.getParticipants());
-  
-  
   
   firebase.push(hung, function(err) {
     var response;
